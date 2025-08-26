@@ -548,7 +548,6 @@
                         start_time: chapterData.startTime || chapterData.start_time || '',
                         end_time: chapterData.endTime || chapterData.end_time || '',
                         summary: chapterData.summary || '',
-                        key_topics: chapterData.keyTopics || chapterData.key_topics || [],
                         main_topic_category: chapterData.mainTopicCategory || chapterData.main_topic_category || '',
                         related_events: chapterData.relatedEvents || chapterData.related_events || [],
                         keywords: chapterData.keywords || [],  // Include standardized keywords
@@ -837,9 +836,6 @@
                         <div class="chapter-summary">${chapter.summary}</div>
                         <div class="tags">
                             <span class="tag topic">${chapter.main_topic_category}</span>
-                            ${(chapter.key_topics || []).map(topic => 
-                                `<span class="tag">${topic}</span>`
-                            ).join('')}
                         </div>
                         ${chapter.keywords?.length ? `
                             <div class="chapter-keywords">

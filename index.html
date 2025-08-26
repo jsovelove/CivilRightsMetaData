@@ -550,7 +550,8 @@
                         summary: chapterData.summary || '',
                         main_topic_category: chapterData.mainTopicCategory || chapterData.main_topic_category || '',
                         related_events: chapterData.relatedEvents || chapterData.related_events || [],
-                        keywords: chapterData.keywords || [],  // Include standardized keywords
+                        keywords: chapterData.keywords || chapterData.keyTopics || [],  // Handle both new and old data
+                        keyword_matching_info: chapterData.keywordMatchingInfo || chapterData.keyword_matching_info || {},
                         notable_quotes: chapterData.notableQuotes || chapterData.notable_quotes || []
                     });
                 });

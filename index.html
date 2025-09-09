@@ -526,20 +526,22 @@
                     console.log('Chapter data sample:', {
                         chapterNumber: chapterData.chapterNumber,
                         topic: chapterData.topic,
+                        keywords: chapterData.keywords?.length || 0,
                         keyTopics: chapterData.keyTopics?.length || 0,
                         summary: chapterData.summary?.substring(0, 50) + '...'
                     });
 
                     chapters.push({
                         chapter_number: chapterData.chapterNumber || 0,
-                        title: chapterData.topic || '',
-                        start_time: chapterData.startTime || '',
-                        end_time: chapterData.endTime || '',
+                        title: chapterData.topic || chapterData.title || '',
+                        start_time: chapterData.startTime || chapterData.start_time || '',
+                        end_time: chapterData.endTime || chapterData.end_time || '',
                         summary: chapterData.summary || '',
-                        key_topics: chapterData.keyTopics || [],  // Exactly 3 topics
-                        main_topic_category: chapterData.mainTopicCategory || '',
-                        related_events: chapterData.relatedEvents || [],
-                        notable_quotes: chapterData.notableQuotes || []
+                        main_topic_category: chapterData.mainTopicCategory || chapterData.main_topic_category || '',
+                        related_events: chapterData.relatedEvents || chapterData.related_events || [],
+                        keywords: chapterData.keywords || chapterData.keyTopics || [],  // Handle both new and old data
+                        keyword_matching_info: chapterData.keywordMatchingInfo || chapterData.keyword_matching_info || {},
+                        notable_quotes: chapterData.notableQuotes || chapterData.notable_quotes || []
                     });
                 });
 
@@ -894,8 +896,8 @@
                         <div class="chapter-summary">${chapter.summary}</div>
                         <div class="tags">
                             <span class="tag topic">${chapter.main_topic_category}</span>
-                            ${(chapter.key_topics || []).map(topic =>
-                `<span class="tag">${topic}</span>`
+                            ${(chapter.keywords || []).map(keyword =>
+                `<span class="tag">${keyword}</span>`
             ).join('')}
                         </div>
                         ${chapter.related_events?.length ? `

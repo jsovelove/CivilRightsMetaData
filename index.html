@@ -12,7 +12,7 @@
 
     <!-- Firebase Configuration -->
     <script>
-        // Firebase configuration - Update these values with your Firebase project settings
+        // Firebase configuration - replace these values with your actual Firebase project settings
         const firebaseConfig = {
             apiKey: "AIzaSyDGolxlZNoEzk7z46ZMtSk9YsP32MlH45Q",
             authDomain: "llm-hyper-audio.firebaseapp.com",
@@ -23,13 +23,14 @@
             measurementId: "G-HFEKE65YC6"
         };
 
-        // TODO: Replace the above placeholder values with your actual Firebase config
-        // To get your Firebase config:
-        // 1. Go to Firebase Console (https://console.firebase.google.com/)
+        // To configure Firebase:
+        // 1. Go to your Firebase Console (https://console.firebase.google.com/)
         // 2. Select your project
-        // 3. Go to Project Settings → General → Your apps
-        // 4. Click on the web app or create a new web app
-        // 5. Copy the config object and replace the values above
+        // 3. Click the gear icon → Project settings
+        // 4. Scroll down to "Your apps" section
+        // 5. Click on your web app or create one
+        // 6. Copy the firebaseConfig object from the SDK setup
+        // 7. Replace the values above with your actual configuration
     </script>
 
     <style>
@@ -220,18 +221,6 @@
         .tag.event {
             background: #fff3e0;
             color: #f39c12;
-        }
-
-        .tag.standardized {
-            background: #e8f4fd;
-            color: #1976d2;
-            border: 1px solid #bbdefb;
-        }
-
-        .tag.ai-generated {
-            background: #f3e5f5;
-            color: #7b1fa2;
-            border: 1px solid #e1bee7;
         }
 
         .chapters-preview {
@@ -547,12 +536,7 @@
                         start_time: chapterData.startTime || '',
                         end_time: chapterData.endTime || '',
                         summary: chapterData.summary || '',
-                        // New keyword structure
-                        standardized_keywords: chapterData.standardizedKeywords || [],
-                        ai_generated_keywords: chapterData.aiGeneratedKeywords || [],
-                        keywords: chapterData.keywords || chapterData.keyTopics || [],  // Combined keywords for backward compatibility
-                        key_topics: chapterData.keyTopics || [],  // Legacy field - keeping for backward compatibility
-                        keyword_matching_info: chapterData.keywordMatchingInfo || {},
+                        key_topics: chapterData.keyTopics || [],  // Exactly 3 topics
                         main_topic_category: chapterData.mainTopicCategory || '',
                         related_events: chapterData.relatedEvents || [],
                         notable_quotes: chapterData.notableQuotes || []
@@ -730,9 +714,7 @@
                             end_time: "00:25:15",
                             main_topic_category: "Integration, Education & Everyday Segregation",
                             related_events: [],
-                            standardized_keywords: ["Seattle", "school integration"],
-                            ai_generated_keywords: ["Central District childhood"],
-                            keywords: ["Seattle", "school integration", "Central District childhood"]
+                            keywords: ["childhood", "Seattle", "education", "segregation"]
                         },
                         {
                             chapter_number: 2,
@@ -741,10 +723,8 @@
                             start_time: "00:25:15",
                             end_time: "00:58:42",
                             main_topic_category: "Organizations & Movement Networks",
-                            related_events: ["Black Panther Party"],
-                            standardized_keywords: ["Black Panther Party", "community organizing"],
-                            ai_generated_keywords: ["Seattle chapter founding"],
-                            keywords: ["Black Panther Party", "community organizing", "Seattle chapter founding"]
+                            related_events: ["The Involvment of the Black Panthers"],
+                            keywords: ["Black Panthers", "organizing", "Seattle", "community"]
                         }
                     ]
                 }
@@ -893,11 +873,6 @@
                 </div>
 
                 <h3>Chapters</h3>
-                <div style="margin-bottom: 15px; padding: 10px; background: #f8f9fa; border-radius: 6px; font-size: 0.9em;">
-                    <strong>Keyword Legend:</strong> 
-                    <span class="tag standardized" style="margin: 0 5px;">🔗 Standardized</span> keywords from master collection • 
-                    <span class="tag ai-generated" style="margin: 0 5px;">🤖 AI-generated</span> unique concepts
-                </div>
                 ${(interview.chapters || []).sort((a, b) => (a.chapter_number || 0) - (b.chapter_number || 0)).map(chapter => `
                     <div class="chapter">
                         <div class="chapter-header">
@@ -919,23 +894,10 @@
                         <div class="chapter-summary">${chapter.summary}</div>
                         <div class="tags">
                             <span class="tag topic">${chapter.main_topic_category}</span>
-                        </div>
-                        ${(chapter.standardized_keywords?.length || chapter.ai_generated_keywords?.length) ? `
-                            <div class="tags" style="margin-top: 8px;">
-                                ${(chapter.standardized_keywords || []).map(keyword =>
-                `<span class="tag standardized" title="Standardized keyword from events_and_topics collection">🔗 ${keyword}</span>`
-            ).join('')}
-                                ${(chapter.ai_generated_keywords || []).map(keyword =>
-                `<span class="tag ai-generated" title="AI-generated keyword (not found in standardized collection)">🤖 ${keyword}</span>`
-            ).join('')}
-                            </div>
-                        ` : `
-                            <div class="tags" style="margin-top: 8px;">
-                                ${(chapter.key_topics || chapter.keywords || []).map(topic =>
+                            ${(chapter.key_topics || []).map(topic =>
                 `<span class="tag">${topic}</span>`
             ).join('')}
-                            </div>
-                        `}
+                        </div>
                         ${chapter.related_events?.length ? `
                             <div class="chapter-events">
                                 <strong>Related Events:</strong>
@@ -1367,16 +1329,16 @@
             errorContainer.innerHTML = `
                 <div style="background: #fff3cd; color: #856404; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
                     <h4>🔧 Firebase Configuration Required</h4>
-                    <p>To connect to your Firestore database, please update the Firebase configuration in this HTML file:</p>
+                    <p>To connect to your Firestore database, please update the Firebase configuration:</p>
                     <ol>
-                        <li>Go to <a href="https://console.firebase.google.com/" target="_blank">Firebase Console</a></li>
+                        <li>Go to your Firebase Console (https://console.firebase.google.com/)</li>
                         <li>Select your project</li>
                         <li>Go to Project Settings → General → Your apps</li>
                         <li>Copy your Firebase config object</li>
-                        <li>Edit this HTML file and replace the <code>firebaseConfig</code> object (around line 15)</li>
-                        <li>Refresh this page</li>
+                        <li>Edit this HTML file and replace the <code>firebaseConfig</code> object near the top</li>
+                        <li>Look for the comment "Firebase configuration - replace these values"</li>
+                        <li>Save the file and refresh this page</li>
                     </ol>
-                    <p>Look for the section that starts with <code>const firebaseConfig = {</code> and replace the placeholder values.</p>
                     <p>For now, showing example data to demonstrate the interface.</p>
                 </div>
             `;

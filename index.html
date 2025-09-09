@@ -1,17 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Civil Rights Interview Archive</title>
-    
+
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-    
+
     <!-- Firebase Configuration -->
-    <script src="firebase-config.js"></script>
-    
+    <script>
+        // Firebase configuration - Update these values with your Firebase project settings
+        const firebaseConfig = {
+            apiKey: "AIzaSyDGolxlZNoEzk7z46ZMtSk9YsP32MlH45Q",
+            authDomain: "llm-hyper-audio.firebaseapp.com",
+            projectId: "llm-hyper-audio",
+            storageBucket: "llm-hyper-audio.firebasestorage.app",
+            messagingSenderId: "530304773274",
+            appId: "1:530304773274:web:1764f58974d6c2fd060323",
+            measurementId: "G-HFEKE65YC6"
+        };
+
+        // TODO: Replace the above placeholder values with your actual Firebase config
+        // To get your Firebase config:
+        // 1. Go to Firebase Console (https://console.firebase.google.com/)
+        // 2. Select your project
+        // 3. Go to Project Settings → General → Your apps
+        // 4. Click on the web app or create a new web app
+        // 5. Copy the config object and replace the values above
+    </script>
+
     <style>
         * {
             margin: 0;
@@ -56,7 +76,7 @@
             background: white;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 30px;
         }
 
@@ -67,7 +87,8 @@
             align-items: center;
         }
 
-        .search-bar input, .search-bar select {
+        .search-bar input,
+        .search-bar select {
             padding: 12px;
             border: 2px solid #ddd;
             border-radius: 6px;
@@ -109,7 +130,7 @@
             background: white;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
 
@@ -133,7 +154,7 @@
         .interview-card {
             background: white;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             transition: transform 0.3s, box-shadow 0.3s;
             cursor: pointer;
@@ -141,7 +162,7 @@
 
         .interview-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
         }
 
         .interview-header {
@@ -202,7 +223,7 @@
         }
 
         .tag.standardized {
-            background: #e3f2fd;
+            background: #e8f4fd;
             color: #1976d2;
             border: 1px solid #bbdefb;
         }
@@ -210,7 +231,7 @@
         .tag.ai-generated {
             background: #f3e5f5;
             color: #7b1fa2;
-            border: 1px solid #ce93d8;
+            border: 1px solid #e1bee7;
         }
 
         .chapters-preview {
@@ -225,7 +246,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0, 0, 0, 0.8);
             z-index: 1000;
         }
 
@@ -343,15 +364,16 @@
             .interviews-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .search-bar {
                 flex-direction: column;
             }
-            
-            .search-bar input, .search-bar select {
+
+            .search-bar input,
+            .search-bar select {
                 width: 100%;
             }
-            
+
             .modal-content {
                 width: 95%;
                 margin: 1% auto;
@@ -359,6 +381,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <header>
@@ -373,15 +396,18 @@
                     <option value="">All Topics</option>
                     <option value="Voting & Legal Rights">Voting & Legal Rights</option>
                     <option value="Organizations & Movement Networks">Organizations & Movement Networks</option>
-                    <option value="Violence, Intimidation & State Repression">Violence, Intimidation & State Repression</option>
-                    <option value="Integration, Education & Everyday Segregation">Integration, Education & Everyday Segregation</option>
+                    <option value="Violence, Intimidation & State Repression">Violence, Intimidation & State Repression
+                    </option>
+                    <option value="Integration, Education & Everyday Segregation">Integration, Education & Everyday
+                        Segregation</option>
                     <option value="Historical Figures & Turning Points">Historical Figures & Turning Points</option>
                 </select>
                 <select id="eventFilter">
                     <option value="">All Events</option>
                 </select>
                 <button class="load-data-btn" onclick="loadFromFirestore()">Load from Firestore</button>
-                <button class="load-data-btn" onclick="loadFromFile()" style="background: #95a5a6;">Load JSON File</button>
+                <button class="load-data-btn" onclick="loadFromFile()" style="background: #95a5a6;">Load JSON
+                    File</button>
             </div>
             <div id="firebaseStatus" style="margin-top: 10px; padding: 10px; border-radius: 6px; display: none;">
                 <strong>Firebase Status:</strong> <span id="statusText">Not connected</span>
@@ -405,10 +431,6 @@
                 <h3>Total Duration</h3>
                 <div class="number" id="totalDuration">-</div>
             </div>
-            <div class="stat-card">
-                <h3>Keywords</h3>
-                <div class="number" id="keywordStats">-</div>
-            </div>
         </div>
 
         <div id="errorContainer"></div>
@@ -417,7 +439,8 @@
         <div class="interviews-grid" id="interviewsContainer">
             <div class="no-data">
                 <h3>No Interview Data Loaded</h3>
-                <p>Click "Load from Firestore" to fetch processed interviews from your Firebase database, or "Load JSON File" to upload a local file.</p>
+                <p>Click "Load from Firestore" to fetch processed interviews from your Firebase database, or "Load JSON
+                    File" to upload a local file.</p>
             </div>
         </div>
     </div>
@@ -439,7 +462,7 @@
         let interviewsData = [];
         let filteredInterviews = [];
         let db = null;
-        
+
         // Firebase config is loaded from firebase-config.js
 
         // Initialize Firebase
@@ -462,10 +485,10 @@
         function updateFirebaseStatus(message, type) {
             const statusContainer = document.getElementById('firebaseStatus');
             const statusText = document.getElementById('statusText');
-            
+
             statusContainer.style.display = 'block';
             statusText.textContent = message;
-            
+
             if (type === 'success') {
                 statusContainer.style.background = '#d4edda';
                 statusContainer.style.color = '#155724';
@@ -486,27 +509,27 @@
             try {
                 console.log(`\n=== Loading interview: ${doc.id} ===`);
                 console.log('Main data keys:', Object.keys(mainData));
-                
+
                 // Load chapters from subcollection
                 console.log('Attempting to load subSummaries subcollection...');
                 console.log('Document reference path:', doc.ref.path);
                 console.log('Full subcollection path:', `${doc.ref.path}/subSummaries`);
-                
+
                 const chaptersSnapshot = await doc.ref.collection('subSummaries').orderBy('chapterNumber').get();
-                
+
                 console.log(`Subcollection query result: ${chaptersSnapshot.size} documents found`);
-                
+
                 if (chaptersSnapshot.empty) {
                     console.warn(`No chapters found in subSummaries for ${doc.id}`);
                     console.log('Trying without orderBy in case of missing chapterNumber field...');
-                    
+
                     // Try again without orderBy in case chapterNumber field is missing
                     const retrySnapshot = await doc.ref.collection('subSummaries').get();
                     console.log(`Retry query result: ${retrySnapshot.size} documents found`);
                 }
-                
+
                 const chapters = [];
-                
+
                 chaptersSnapshot.forEach((chapterDoc) => {
                     console.log(`Processing chapter document: ${chapterDoc.id}`);
                     const chapterData = chapterDoc.data();
@@ -517,28 +540,30 @@
                         keyTopics: chapterData.keyTopics?.length || 0,
                         summary: chapterData.summary?.substring(0, 50) + '...'
                     });
-                    
+
                     chapters.push({
                         chapter_number: chapterData.chapterNumber || 0,
                         title: chapterData.topic || '',
                         start_time: chapterData.startTime || '',
                         end_time: chapterData.endTime || '',
                         summary: chapterData.summary || '',
+                        // New keyword structure
+                        standardized_keywords: chapterData.standardizedKeywords || [],
+                        ai_generated_keywords: chapterData.aiGeneratedKeywords || [],
                         keywords: chapterData.keywords || chapterData.keyTopics || [],  // Combined keywords for backward compatibility
-                        standardized_keywords: chapterData.standardized_keywords || chapterData.standardizedKeywords || [],  // Keywords matched to events_and_topics collection
-                        ai_generated_keywords: chapterData.ai_generated_keywords || chapterData.aiGeneratedKeywords || [],  // AI-only keywords
-                        keyword_matching_info: chapterData.keyword_matching_info || chapterData.keywordMatchingInfo || {},  // Matching details
+                        key_topics: chapterData.keyTopics || [],  // Legacy field - keeping for backward compatibility
+                        keyword_matching_info: chapterData.keywordMatchingInfo || {},
                         main_topic_category: chapterData.mainTopicCategory || '',
                         related_events: chapterData.relatedEvents || [],
                         notable_quotes: chapterData.notableQuotes || []
                     });
                 });
-                
+
                 // Sort chapters by chapter number to ensure proper ordering
                 chapters.sort((a, b) => (a.chapter_number || 0) - (b.chapter_number || 0));
-                
+
                 console.log(`✅ Successfully processed ${chapters.length} chapters for ${doc.id}`);
-                
+
                 // Return in the format expected by the web interface
                 const result = {
                     id: doc.id,
@@ -560,14 +585,14 @@
                     location: mainData.location || '',
                     interviewer: mainData.interviewer || ''
                 };
-                
+
                 console.log(`Final result for ${doc.id}: ${result.chapters.length} chapters`);
                 return result;
-                
+
             } catch (error) {
                 console.error(`❌ Error loading interview ${doc.id}:`, error);
                 console.error('Error details:', error.message, error.stack);
-                
+
                 // Return basic structure even if chapter loading fails
                 return {
                     id: doc.id,
@@ -596,7 +621,7 @@
         async function loadFromFirestore() {
             const loadingContainer = document.getElementById('loadingContainer');
             const errorContainer = document.getElementById('errorContainer');
-            
+
             loadingContainer.innerHTML = '<div class="loading">Connecting to Firestore...</div>';
             errorContainer.innerHTML = '';
 
@@ -610,41 +635,41 @@
             try {
                 updateFirebaseStatus('Loading interviews from Firestore...', 'info');
                 loadingContainer.innerHTML = '<div class="loading">Loading interviews from Firestore...</div>';
-                
+
                 // Fetch all interviews from Firestore (using metadataV2 collection)
                 const interviewsSnapshot = await db.collection('metadataV2').get();
-                
+
                 if (interviewsSnapshot.empty) {
                     throw new Error('No interviews found in Firestore database.');
                 }
-                
+
                 interviewsData = [];
-                
+
                 // Load main documents and their chapters
                 const interviewPromises = [];
-                
+
                 interviewsSnapshot.forEach((doc) => {
                     const data = doc.data();
                     console.log(`Main document ${doc.id}:`, data);
                     const interviewPromise = loadInterviewWithChapters(doc, data);
                     interviewPromises.push(interviewPromise);
                 });
-                
+
                 interviewsData = await Promise.all(interviewPromises);
                 console.log('Final interviewsData:', interviewsData);
-                
+
                 loadingContainer.innerHTML = '';
                 updateFirebaseStatus(`Loaded ${interviewsData.length} interviews from Firestore`, 'success');
                 updateStats();
                 populateFilters();
                 displayInterviews();
-                
+
             } catch (error) {
                 loadingContainer.innerHTML = '';
                 console.error('Firestore error:', error);
                 errorContainer.innerHTML = `<div class="error">Error loading from Firestore: ${error.message}</div>`;
                 updateFirebaseStatus(`Error: ${error.message}`, 'error');
-                
+
                 // Fallback to example data
                 loadExampleData();
             }
@@ -654,7 +679,7 @@
         async function loadFromFile() {
             const loadingContainer = document.getElementById('loadingContainer');
             const errorContainer = document.getElementById('errorContainer');
-            
+
             loadingContainer.innerHTML = '<div class="loading">Loading interview data from file...</div>';
             errorContainer.innerHTML = '';
 
@@ -663,19 +688,19 @@
                 if (!response.ok) {
                     throw new Error('Could not load interviews_data.json. Make sure the file exists or use "Load from Firestore".');
                 }
-                
+
                 const data = await response.json();
                 interviewsData = data.interviews || [];
-                
+
                 loadingContainer.innerHTML = '';
                 updateStats();
                 populateFilters();
                 displayInterviews();
-                
+
             } catch (error) {
                 loadingContainer.innerHTML = '';
                 errorContainer.innerHTML = `<div class="error">Error loading JSON file: ${error.message}</div>`;
-                
+
                 // Show example data for demonstration
                 loadExampleData();
             }
@@ -705,9 +730,9 @@
                             end_time: "00:25:15",
                             main_topic_category: "Integration, Education & Everyday Segregation",
                             related_events: [],
-                            keywords: ["childhood", "Seattle", "education", "segregation"],
-                            standardized_keywords: ["Seattle", "education"],
-                            ai_generated_keywords: ["childhood experiences"]
+                            standardized_keywords: ["Seattle", "school integration"],
+                            ai_generated_keywords: ["Central District childhood"],
+                            keywords: ["Seattle", "school integration", "Central District childhood"]
                         },
                         {
                             chapter_number: 2,
@@ -716,15 +741,15 @@
                             start_time: "00:25:15",
                             end_time: "00:58:42",
                             main_topic_category: "Organizations & Movement Networks",
-                            related_events: ["The Involvment of the Black Panthers"],
-                            keywords: ["Black Panthers", "organizing", "Seattle", "community"],
-                            standardized_keywords: ["Black Panther Party", "Seattle"],
-                            ai_generated_keywords: ["community organizing"]
+                            related_events: ["Black Panther Party"],
+                            standardized_keywords: ["Black Panther Party", "community organizing"],
+                            ai_generated_keywords: ["Seattle chapter founding"],
+                            keywords: ["Black Panther Party", "community organizing", "Seattle chapter founding"]
                         }
                     ]
                 }
             ];
-            
+
             updateStats();
             populateFilters();
             displayInterviews();
@@ -736,18 +761,14 @@
             const totalChapters = interviewsData.reduce((sum, interview) => sum + (interview.chapters?.length || 0), 0);
             const allEvents = new Set();
             let totalDurationSeconds = 0;
-            let standardizedKeywords = new Set();
-            let aiGeneratedKeywords = new Set();
 
             interviewsData.forEach(interview => {
                 if (interview.metadata?.total_duration_seconds) {
                     totalDurationSeconds += interview.metadata.total_duration_seconds;
                 }
-                
+
                 interview.chapters?.forEach(chapter => {
                     chapter.related_events?.forEach(event => allEvents.add(event));
-                    chapter.standardized_keywords?.forEach(keyword => standardizedKeywords.add(keyword));
-                    chapter.ai_generated_keywords?.forEach(keyword => aiGeneratedKeywords.add(keyword));
                 });
             });
 
@@ -755,17 +776,6 @@
             document.getElementById('totalChapters').textContent = totalChapters;
             document.getElementById('totalEvents').textContent = allEvents.size;
             document.getElementById('totalDuration').textContent = formatDuration(totalDurationSeconds);
-            
-            // Show keyword breakdown
-            const keywordStatsEl = document.getElementById('keywordStats');
-            const totalUniqueKeywords = standardizedKeywords.size + aiGeneratedKeywords.size;
-            keywordStatsEl.innerHTML = `
-                <div style="font-size: 1.5em; margin-bottom: 5px;">${totalUniqueKeywords}</div>
-                <div style="font-size: 0.7em; line-height: 1.2;">
-                    <span style="color: #1976d2;">📚 ${standardizedKeywords.size}</span> • 
-                    <span style="color: #7b1fa2;">🤖 ${aiGeneratedKeywords.size}</span>
-                </div>
-            `;
         }
 
         // Populate filter dropdowns
@@ -781,7 +791,7 @@
 
             // Clear existing options (except "All Events")
             eventFilter.innerHTML = '<option value="">All Events</option>';
-            
+
             Array.from(allEvents).sort().forEach(event => {
                 const option = document.createElement('option');
                 option.value = event;
@@ -793,7 +803,7 @@
         // Display interviews
         function displayInterviews() {
             const container = document.getElementById('interviewsContainer');
-            
+
             if (filteredInterviews.length === 0 && interviewsData.length > 0) {
                 filteredInterviews = [...interviewsData];
             }
@@ -818,14 +828,14 @@
                         </div>
                         ${interview.role ? `<div class="tags"><span class="tag" style="background: #e3f2fd; color: #1976d2;">👤 ${interview.role}</span></div>` : ''}
                         <div class="tags">
-                            ${(interview.main_summary?.key_themes || []).map(theme => 
-                                `<span class="tag topic">${theme}</span>`
-                            ).join('')}
+                            ${(interview.main_summary?.key_themes || []).map(theme =>
+                `<span class="tag topic">${theme}</span>`
+            ).join('')}
                         </div>
                         <div class="tags">
-                            ${getUniqueEvents(interview).map(event => 
-                                `<span class="tag event">${event}</span>`
-                            ).join('')}
+                            ${getUniqueEvents(interview).map(event =>
+                `<span class="tag event">${event}</span>`
+            ).join('')}
                         </div>
                         <div class="chapters-preview">
                             ${(interview.chapters?.length || 0)} chapters • ${interview.metadata?.word_count || 0} words
@@ -851,7 +861,7 @@
             if (!interview) return;
 
             document.getElementById('modalTitle').textContent = interview.interview_name;
-            
+
             const modalBody = document.getElementById('modalBody');
             modalBody.innerHTML = `
                 <div style="margin-bottom: 30px;">
@@ -873,9 +883,9 @@
                     
                     <h4 style="margin-top: 20px;">Key Themes</h4>
                     <div class="tags">
-                        ${(interview.main_summary?.key_themes || []).map(theme => 
-                            `<span class="tag topic">${theme}</span>`
-                        ).join('')}
+                        ${(interview.main_summary?.key_themes || []).map(theme =>
+                `<span class="tag topic">${theme}</span>`
+            ).join('')}
                     </div>
                     
                     <h4 style="margin-top: 20px;">Historical Significance</h4>
@@ -883,14 +893,10 @@
                 </div>
 
                 <h3>Chapters</h3>
-                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9em;">
-                    <strong>Keyword Legend:</strong>
-                    <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px;">
-                        <span class="tag standardized">📚 Standardized</span> from events_and_topics collection
-                        <span class="tag ai-generated">🤖 AI-Generated</span> unique concepts identified by AI
-                        <span class="tag topic">Main Topic</span> category
-                        <span class="tag event">Civil Rights Event</span> referenced
-                    </div>
+                <div style="margin-bottom: 15px; padding: 10px; background: #f8f9fa; border-radius: 6px; font-size: 0.9em;">
+                    <strong>Keyword Legend:</strong> 
+                    <span class="tag standardized" style="margin: 0 5px;">🔗 Standardized</span> keywords from master collection • 
+                    <span class="tag ai-generated" style="margin: 0 5px;">🤖 AI-generated</span> unique concepts
                 </div>
                 ${(interview.chapters || []).sort((a, b) => (a.chapter_number || 0) - (b.chapter_number || 0)).map(chapter => `
                     <div class="chapter">
@@ -913,26 +919,30 @@
                         <div class="chapter-summary">${chapter.summary}</div>
                         <div class="tags">
                             <span class="tag topic">${chapter.main_topic_category}</span>
-                            ${(chapter.standardized_keywords || []).map(keyword => 
-                                `<span class="tag standardized" title="Matched to events_and_topics collection">📚 ${keyword}</span>`
-                            ).join('')}
-                            ${(chapter.ai_generated_keywords || []).map(keyword => 
-                                `<span class="tag ai-generated" title="AI-generated keyword">🤖 ${keyword}</span>`
-                            ).join('')}
-                            ${(chapter.keywords || chapter.key_topics || []).filter(keyword => 
-                                !(chapter.standardized_keywords || []).includes(keyword) && 
-                                !(chapter.ai_generated_keywords || []).includes(keyword)
-                            ).map(keyword => 
-                                `<span class="tag">${keyword}</span>`
-                            ).join('')}
                         </div>
+                        ${(chapter.standardized_keywords?.length || chapter.ai_generated_keywords?.length) ? `
+                            <div class="tags" style="margin-top: 8px;">
+                                ${(chapter.standardized_keywords || []).map(keyword =>
+                `<span class="tag standardized" title="Standardized keyword from events_and_topics collection">🔗 ${keyword}</span>`
+            ).join('')}
+                                ${(chapter.ai_generated_keywords || []).map(keyword =>
+                `<span class="tag ai-generated" title="AI-generated keyword (not found in standardized collection)">🤖 ${keyword}</span>`
+            ).join('')}
+                            </div>
+                        ` : `
+                            <div class="tags" style="margin-top: 8px;">
+                                ${(chapter.key_topics || chapter.keywords || []).map(topic =>
+                `<span class="tag">${topic}</span>`
+            ).join('')}
+                            </div>
+                        `}
                         ${chapter.related_events?.length ? `
                             <div class="chapter-events">
                                 <strong>Related Events:</strong>
                                 <div class="tags">
-                                    ${chapter.related_events.map(event => 
-                                        `<span class="tag event">${event}</span>`
-                                    ).join('')}
+                                    ${chapter.related_events.map(event =>
+                `<span class="tag event">${event}</span>`
+            ).join('')}
                                 </div>
                             </div>
                         ` : ''}
@@ -941,7 +951,7 @@
             `;
 
             document.getElementById('interviewModal').style.display = 'block';
-            
+
             // Add debug button if video is present
             if (interview.videoEmbedLink) {
                 setTimeout(() => addVideoDebugButton(), 100);
@@ -961,7 +971,7 @@
 
             filteredInterviews = interviewsData.filter(interview => {
                 // Search term filter
-                const matchesSearch = !searchTerm || 
+                const matchesSearch = !searchTerm ||
                     interview.interview_name.toLowerCase().includes(searchTerm) ||
                     interview.main_summary?.summary.toLowerCase().includes(searchTerm) ||
                     interview.main_summary?.key_themes?.some(theme => theme.toLowerCase().includes(searchTerm));
@@ -972,7 +982,7 @@
 
                 // Event filter
                 const matchesEvent = !eventFilter ||
-                    interview.chapters?.some(chapter => 
+                    interview.chapters?.some(chapter =>
                         chapter.related_events?.includes(eventFilter));
 
                 return matchesSearch && matchesTopic && matchesEvent;
@@ -992,7 +1002,7 @@
         // Convert HH:MM:SS timestamp to MM:SS format
         function formatTimestamp(timeString) {
             if (!timeString) return '';
-            
+
             // Handle various timestamp formats
             const parts = timeString.split(':');
             if (parts.length === 3) {
@@ -1000,7 +1010,7 @@
                 const hours = parseInt(parts[0]) || 0;
                 const minutes = parseInt(parts[1]) || 0;
                 const seconds = parseInt(parts[2]) || 0;
-                
+
                 // Convert to total minutes and seconds
                 const totalMinutes = hours * 60 + minutes;
                 return `${totalMinutes}:${seconds.toString().padStart(2, '0')}`;
@@ -1008,28 +1018,28 @@
                 // Already MM:SS format
                 return timeString;
             }
-            
+
             return timeString; // Return as-is if format is unclear
         }
 
         // Convert timestamp to seconds for video navigation
         function timestampToSeconds(timeString) {
             console.log(`Converting timestamp: "${timeString}"`);
-            
+
             if (!timeString) {
                 console.log('Empty timeString, returning 0');
                 return 0;
             }
-            
+
             const parts = timeString.split(':');
             console.log('Timestamp parts:', parts);
-            
+
             if (parts.length === 3) {
                 // HH:MM:SS format
                 const hours = parseInt(parts[0]) || 0;
                 const minutes = parseInt(parts[1]) || 0;
                 const seconds = parseInt(parts[2]) || 0;
-                
+
                 const totalSeconds = hours * 3600 + minutes * 60 + seconds;
                 console.log(`HH:MM:SS format: ${hours}h ${minutes}m ${seconds}s = ${totalSeconds} total seconds`);
                 return totalSeconds;
@@ -1037,12 +1047,12 @@
                 // MM:SS format
                 const minutes = parseInt(parts[0]) || 0;
                 const seconds = parseInt(parts[1]) || 0;
-                
+
                 const totalSeconds = minutes * 60 + seconds;
                 console.log(`MM:SS format: ${minutes}m ${seconds}s = ${totalSeconds} total seconds`);
                 return totalSeconds;
             }
-            
+
             console.log('Unknown timestamp format, returning 0');
             return 0;
         }
@@ -1050,24 +1060,24 @@
         // Navigate video to specific timestamp
         function navigateToTimestamp(timestamp, interviewName) {
             console.log(`Navigating to ${timestamp} in ${interviewName}`);
-            
+
             // Find the video iframe in the modal
             const iframe = document.querySelector('#interviewModal iframe');
             if (!iframe) {
                 alert('Video player not found. Please open the interview details first.');
                 return;
             }
-            
+
             // Convert timestamp to seconds
             const seconds = timestampToSeconds(timestamp);
             console.log(`Converted ${timestamp} to ${seconds} seconds`);
-            
+
             try {
                 const currentSrc = iframe.src;
                 console.log('Current iframe src:', currentSrc);
-                
+
                 let newSrc;
-                
+
                 // Handle different video platforms
                 if (currentSrc.includes('youtube.com') || currentSrc.includes('youtu.be')) {
                     // YouTube handling
@@ -1079,33 +1089,33 @@
                     // Generic handling - try common patterns
                     newSrc = handleGenericTimestamp(currentSrc, seconds);
                 }
-                
+
                 if (newSrc && newSrc !== currentSrc) {
                     console.log('New iframe src:', newSrc);
                     iframe.src = newSrc;
-                    
+
                     // Add visual feedback
                     showTimestampFeedback(formatTimestamp(timestamp));
                 } else {
                     console.warn('Could not generate new URL for timestamp navigation');
                     alert(`Timestamp navigation may not be supported for this video platform. Tried to navigate to ${formatTimestamp(timestamp)}.`);
                 }
-                
+
             } catch (error) {
                 console.error('Error navigating video:', error);
                 alert(`Could not navigate to timestamp ${formatTimestamp(timestamp)}. Error: ${error.message}`);
             }
         }
-        
+
         // Handle YouTube timestamp navigation
         function handleYouTubeTimestamp(currentSrc, seconds) {
             console.log(`Handling YouTube timestamp: ${seconds} seconds`);
             console.log('Original URL:', currentSrc);
-            
+
             // Remove existing time parameters
             let newSrc = currentSrc.split('&t=')[0].split('?t=')[0].split('#t=')[0].split('&start=')[0].split('?start=')[0];
             console.log('Cleaned URL:', newSrc);
-            
+
             // For YouTube, we need to handle both embed and watch URLs
             if (newSrc.includes('/embed/')) {
                 // YouTube embed URL
@@ -1132,31 +1142,31 @@
                 console.log('Converted short URL to embed:', finalUrl);
                 return finalUrl;
             }
-            
+
             // Fallback - try adding t parameter
             const separator = newSrc.includes('?') ? '&' : '?';
             const finalUrl = `${newSrc}${separator}t=${seconds}s`;
             console.log('Fallback URL generated:', finalUrl);
             return finalUrl;
         }
-        
+
         // Handle Vimeo timestamp navigation
         function handleVimeoTimestamp(currentSrc, seconds) {
             // Remove existing time parameters
             let newSrc = currentSrc.split('#t=')[0].split('?t=')[0];
-            
+
             // For Vimeo, use the #t= parameter
             return `${newSrc}#t=${seconds}s`;
         }
-        
+
         // Handle generic video platforms
         function handleGenericTimestamp(currentSrc, seconds) {
             // Try common timestamp parameters
             let newSrc = currentSrc.split('&t=')[0].split('?t=')[0].split('#t=')[0];
-            
+
             // Try different parameter formats
             const separator = newSrc.includes('?') ? '&' : '?';
-            
+
             // Most common patterns
             const patterns = [
                 `${separator}t=${seconds}`,
@@ -1164,11 +1174,11 @@
                 `${separator}start=${seconds}`,
                 `#t=${seconds}s`
             ];
-            
+
             // Return the first pattern (most likely to work)
             return newSrc + patterns[0];
         }
-        
+
         // Show visual feedback when navigating to timestamp
         function showTimestampFeedback(formattedTime) {
             // Create a temporary notification
@@ -1187,9 +1197,9 @@
                 transition: opacity 0.3s;
             `;
             notification.textContent = `⏰ Navigated to ${formattedTime}`;
-            
+
             document.body.appendChild(notification);
-            
+
             // Remove after 3 seconds
             setTimeout(() => {
                 notification.style.opacity = '0';
@@ -1207,7 +1217,7 @@
         document.getElementById('eventFilter').addEventListener('change', filterInterviews);
 
         // Close modal when clicking outside
-        window.addEventListener('click', function(event) {
+        window.addEventListener('click', function (event) {
             const modal = document.getElementById('interviewModal');
             if (event.target === modal) {
                 closeModal();
@@ -1215,27 +1225,27 @@
         });
 
         // Drag and drop functionality for JSON files
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const container = document.getElementById('interviewsContainer');
-            
-            container.addEventListener('dragover', function(e) {
+
+            container.addEventListener('dragover', function (e) {
                 e.preventDefault();
                 container.style.background = '#f0f8ff';
             });
-            
-            container.addEventListener('dragleave', function(e) {
+
+            container.addEventListener('dragleave', function (e) {
                 e.preventDefault();
                 container.style.background = '';
             });
-            
-            container.addEventListener('drop', function(e) {
+
+            container.addEventListener('drop', function (e) {
                 e.preventDefault();
                 container.style.background = '';
-                
+
                 const files = e.dataTransfer.files;
                 if (files.length > 0 && files[0].type === 'application/json') {
                     const reader = new FileReader();
-                    reader.onload = function(e) {
+                    reader.onload = function (e) {
                         try {
                             const data = JSON.parse(e.target.result);
                             interviewsData = data.interviews || data || [];
@@ -1243,7 +1253,7 @@
                             populateFilters();
                             displayInterviews();
                         } catch (error) {
-                            document.getElementById('errorContainer').innerHTML = 
+                            document.getElementById('errorContainer').innerHTML =
                                 `<div class="error">Error reading JSON file: ${error.message}</div>`;
                         }
                     };
@@ -1257,7 +1267,7 @@
         function addVideoDebugButton() {
             const iframe = document.querySelector('#interviewModal iframe');
             if (!iframe) return;
-            
+
             // Create debug button
             const debugButton = document.createElement('button');
             debugButton.textContent = '🔧 Debug Video URL';
@@ -1274,25 +1284,25 @@
                 cursor: pointer;
                 z-index: 1000;
             `;
-            
-            debugButton.onclick = function() {
+
+            debugButton.onclick = function () {
                 const src = iframe.src;
                 console.log('=== VIDEO DEBUG INFO ===');
                 console.log('Current src:', src);
                 console.log('Is YouTube:', src.includes('youtube.com') || src.includes('youtu.be'));
                 console.log('Is Vimeo:', src.includes('vimeo.com'));
-                
+
                 try {
                     console.log('URL parts:', new URL(src));
                 } catch (e) {
                     console.log('Could not parse URL:', e);
                 }
-                
+
                 // Test timestamp conversion
                 const testTimestamp = '15:30';
                 const seconds = timestampToSeconds(testTimestamp);
                 console.log(`Test: ${testTimestamp} = ${seconds} seconds`);
-                
+
                 // Show what the new URL would be
                 let newSrc;
                 if (src.includes('youtube.com') || src.includes('youtu.be')) {
@@ -1302,13 +1312,13 @@
                 } else {
                     newSrc = handleGenericTimestamp(src, seconds);
                 }
-                
+
                 console.log('New URL would be:', newSrc);
                 console.log('=== END DEBUG INFO ===');
-                
-                                alert(`Debug info logged to console. Check console for details.`);
+
+                alert(`Debug info logged to console. Check console for details.`);
             };
-            
+
             // Add to modal
             const modalContent = document.querySelector('.modal-content');
             if (modalContent) {
@@ -1320,7 +1330,7 @@
         // Test timestamp conversion with various formats
         function testTimestampConversion() {
             console.log('=== TESTING TIMESTAMP CONVERSION ===');
-            
+
             const testCases = [
                 '00:15:30',  // 15 minutes 30 seconds
                 '01:05:15',  // 1 hour 5 minutes 15 seconds  
@@ -1329,20 +1339,20 @@
                 '0:30',      // 30 seconds
                 '120:00'     // 2 hours
             ];
-            
+
             testCases.forEach(testCase => {
                 const seconds = timestampToSeconds(testCase);
                 const formatted = formatTimestamp(testCase);
                 console.log(`"${testCase}" -> ${seconds} seconds -> formatted as "${formatted}"`);
             });
-            
+
             console.log('=== END TIMESTAMP TESTS ===');
         }
 
-        window.addEventListener('load', function() {
+        window.addEventListener('load', function () {
             // Check if Firebase is properly configured
-            if (typeof firebaseConfig !== 'undefined' && 
-                firebaseConfig.projectId && 
+            if (typeof firebaseConfig !== 'undefined' &&
+                firebaseConfig.projectId &&
                 firebaseConfig.projectId !== "your-project-id-here") {
                 loadFromFirestore();
             } else {
@@ -1357,19 +1367,21 @@
             errorContainer.innerHTML = `
                 <div style="background: #fff3cd; color: #856404; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
                     <h4>🔧 Firebase Configuration Required</h4>
-                    <p>To connect to your Firestore database, please update the Firebase configuration:</p>
+                    <p>To connect to your Firestore database, please update the Firebase configuration in this HTML file:</p>
                     <ol>
-                        <li>Go to your Firebase Console</li>
+                        <li>Go to <a href="https://console.firebase.google.com/" target="_blank">Firebase Console</a></li>
                         <li>Select your project</li>
                         <li>Go to Project Settings → General → Your apps</li>
                         <li>Copy your Firebase config object</li>
-                        <li>Edit the <code>firebase-config.js</code> file and paste your config</li>
+                        <li>Edit this HTML file and replace the <code>firebaseConfig</code> object (around line 15)</li>
                         <li>Refresh this page</li>
                     </ol>
+                    <p>Look for the section that starts with <code>const firebaseConfig = {</code> and replace the placeholder values.</p>
                     <p>For now, showing example data to demonstrate the interface.</p>
                 </div>
             `;
         }
     </script>
 </body>
-</html> 
+
+</html>
